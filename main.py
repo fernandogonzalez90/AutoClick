@@ -1,35 +1,27 @@
-import pyautogui
-import keyboard
-import time
-from threading import Thread
+import ctypes
 
+# Definir la ruta al archivo .bat
+ruta_bat = r"main.py"
 
-def click_button():
-    button_image = 'ruta_de_la_imagen_del_boton.png'  # Reemplaza con la ruta de la imagen del botón
-    button_position = pyautogui.locateOnScreen(button_image)
+# Crear una clave en el registro
+key = ctypes.windll.regedit.OpenKey(
+    ctypes.wintypes.HKEY_CURRENT_USER,
+    r"Software\Microsoft\Windows\CurrentVersion\Run",
+    0,
+    ctypes.wintypes.KEY_WRITE
+)
 
-    if button_position:
-        # Obtiene las coordenadas centrales del botón
-        button_center_x, button_center_y = pyautogui.center(button_position)
+# Establecer el valor de la clave
+ctypes.windll.regedit.SetStringValue(
+    key,
+    "Auto Deslogeo",
+    ctypes.wintypes.REG_SZ,
+    ruta_bat,
+    len(ruta_bat) * 2
+)
 
-        # Realiza el clic en el centro del botón
-        pyautogui.click(button_center_x, button_center_y)
-    else:
-        print("No se pudo encontrar el botón en la pantalla.")
+# Cerrar la clave
+ctypes.windll.regedit.CloseKey(key)
 
-
-def monitor_hotkey():
-    keyboard.add_hotkey('alt+f1', lambda: Thread(target=click_button).start())
-
-
-if __name__ == "__main__":
-    # Inicia la monitorización de la combinación de teclas en segundo plano
-    monitor_thread = Thread(target=monitor_hotkey)
-    monitor_thread.daemon = True
-    monitor_thread.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        pass
+# Reiniciar la computadora
+ctypes.windll.user32.ExitWindowsEx(0, 0)
