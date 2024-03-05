@@ -9,7 +9,7 @@ def click_on_button(button_image_path):
 
     # Intentar encontrar el botón en la captura de pantalla hasta 5 veces
     for _ in range(5):
-        button_location = pyautogui.locateOnScreen(button_image_path)
+        button_location = pyautogui.locateOnScreen(button_image_path, confidence=0.7)
         if button_location is not None:
             # El botón fue encontrado, realiza las acciones necesarias
             button_x, button_y = pyautogui.center(button_location)
@@ -48,7 +48,7 @@ def on_release(key):
 ruta_del_boton = 'img/boton.png'
 
 # Definir el atajo de teclado (Alt + F1)
-atajo_teclado = {keyboard.Key.alt}
+atajo_teclado = {keyboard.Key.shift}
 
 # Variables para rastrear el estado de las teclas
 teclas_presionadas = set()
@@ -56,7 +56,7 @@ teclas_presionadas = set()
 # Obtener la ruta de la imagen desde la línea de comandos
 ruta_del_boton = select_image()
 
-# Iniciar la escucha de eventos de teclado
+# Iniciar la escucha de eventos de teclado con pynput.keyboard
 with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     print(f"Imagen seleccionada: {ruta_del_boton}")
     print("Presione Ctrl + C para salir.")
