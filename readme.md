@@ -1,4 +1,4 @@
-# Auto Deslogeo
+# Auto Click
 
 Este programa automatiza la acción de hacer clic en un botón específico en la pantalla cuando se presiona un atajo de teclado. Además, la versión principal incluye una interfaz gráfica (GUI) con un sistema de bandeja de notificaciones.
 App Principal (Interfaz Gráfica y Sistema de Bandeja de Notificaciones)
