@@ -35,9 +35,6 @@ class AppTray:
         # Agrega el ícono a la bandeja de notificaciones
         self.icon.run()
 
-def set_not_found_label(text):
-    not_found_label.config(text=text)
-
 def click_on_button(button_image_path):
     # Hacer una pausa antes de buscar la imagen
     time.sleep(1)
@@ -55,12 +52,7 @@ def click_on_button(button_image_path):
                 # Hacer una pausa antes de intentar nuevamente
                 time.sleep(2)
         except Exception as e:
-            print(f'Error al buscar la imagen {button_image_path}')
-
-            print(f"Error al buscar la imagen: {e}")
-
-    # Si no se encuentra después de varios intentos, mostrar un mensaje en el label
-    not_found_label.config(text="¡Botón no encontrado!")
+           pass
 
     return False
 
@@ -100,7 +92,7 @@ select_image_button.pack(pady=10)
 logout_label = Label(root, text="Presione Alt + F1 para desloguearse")  
 logout_label.pack(pady=10)
 
-atajo_teclado = {keyboard.Key.alt, keyboard.Key.f1}
+atajo_teclado = {keyboard.Key.f12}
 teclas_presionadas = set()
 
 def on_press(key):
@@ -110,8 +102,7 @@ def on_press(key):
         if all([k in teclas_presionadas for k in atajo_teclado]):
             click_successful = click_on_button(button_image_path=ruta_del_boton)
             if not click_successful:
-                # Utiliza after para llamar a set_not_found_label en el hilo principal después de un tiempo
-                root.after(1, set_not_found_label, "¡Botón no encontrado!")
+                print('Boton no encontrado.')
     else:
         teclas_presionadas.clear()
 
@@ -119,11 +110,11 @@ def on_release(key):
     if any([key == k for k in atajo_teclado]):
         teclas_presionadas.remove(key)
 
+
 def on_exit():
     root.quit()  # Cierra la aplicación correctamente
     listener.stop()
-
-with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+with keyboard.Listener(on_press=on_press, on_release=on_release, suppress=True) as listener:
     # Oculta la ventana en lugar de minimizarla
     root.withdraw()
 
